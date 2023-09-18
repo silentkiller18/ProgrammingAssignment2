@@ -1,15 +1,41 @@
-## Put comments here that give an overall description of what your
-## functions do
+# Set the working directory
+setwd('C:/Users/rubind1/Documents/Coursera-R')
 
-## Write a short comment describing this function
+# Define a function to create a cacheable matrix
+makeCacheMatrix <- function(data = matrix(sample(1:100, 9), 3, 3)) {
+  cache <- list(data = data, solve = NULL)
 
-makeCacheMatrix <- function(x = matrix()) {
+  set <- function(x) {
+    cache$data <- x
+    cache$solve <- NULL
+  }
 
+  get <- function() {
+    cache$data
+  }
+
+  setsolve <- function(solve) {
+    cache$solve <- solve
+  }
+
+  getsolve <- function() {
+    cache$solve
+  }
+
+  list(set = set, get = get, setsolve = setsolve, getsolve = getsolve)
 }
 
-
-## Write a short comment describing this function
-
+# Define a function to compute and cache the inverse of a matrix
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+  cached_solve <- x$getsolve()
+  if (!is.null(cached_solve)) {
+    message("Getting cached inverse matrix")
+    return(cached_solve)
+  }
+
+  data <- x$get()
+  inverted_matrix <- solve(data, ...)
+
+  x$setsolve(inverted_matrix)
+  inverted_matrix
 }
